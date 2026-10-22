@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: multi-agent-ecommerce
+  ai:
+    openai:
+      api-key: ${ECOM_LLM_API_KEY:your_api_key_here}
+      base-url: ${ECOM_LLM_BASE_URL:https://api.minimax.chat/v1}
+      chat:
+        options:
+          model: ${ECOM_LLM_MODEL:MiniMax-M1}
+          temperature: 0.7
+  datasource:
+    url: jdbc:h2:mem:ecommerce
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+server:
+  port: 8080
