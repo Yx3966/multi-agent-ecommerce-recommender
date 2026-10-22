@@ -1,0 +1,17 @@
+langgraph>=0.4.0
+langchain>=0.3.0
+langchain-openai>=0.3.0
+langchain-community>=0.3.0
+fastapi>=0.115.0
+uvicorn>=0.34.0
+redis>=5.2.0
+pymilvus>=2.5.0
+sqlalchemy>=2.0.0
+pydantic>=2.10.0
+pydantic-settings>=2.7.0
+httpx>=0.28.0
+numpy>=2.0.0
+python-dotenv>=1.0.0
+tenacity>=9.0.0
+structlog>=24.4.0
+prometheus-client>=0.21.0
