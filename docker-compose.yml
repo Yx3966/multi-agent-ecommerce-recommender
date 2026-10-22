@@ -1,0 +1,60 @@
+version: "3.8"
+
+services:
+  # Python API Server
+  api:
+    build:
+      context: ./python
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - ECOM_LLM_API_KEY=${ECOM_LLM_API_KEY:-your_api_key_here}
+      - ECOM_LLM_BASE_URL=${ECOM_LLM_BASE_URL:-https://api.minimax.chat/v1}
+      - ECOM_LLM_MODEL=${ECOM_LLM_MODEL:-MiniMax-M1}
+      - ECOM_REDIS_URL=redis://redis:6379/0
+      - ECOM_MILVUS_HOST=milvus
+      - ECOM_DATABASE_URL=sqlite:///./ecommerce.db
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  # Redis - Feature Store
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+
+  # Milvus - Vector Database (standalone mode)
+  milvus:
+    image: milvusdb/milvus:v2.4-latest
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+    environment:
+      - ETCD_USE_EMBED=true
+      - COMMON_STORAGETYPE=local
+    volumes:
+      - milvus_data:/var/lib/milvus
+    restart: unless-stopped
+
+  # MySQL - Business Data
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=ecommerce123
+      - MYSQL_DATABASE=ecommerce
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  milvus_data:
+  mysql_data:
